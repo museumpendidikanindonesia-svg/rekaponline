@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard MPI</title>
+<title>Museum Pendidikan Indonesia</title>
 
 <style>
 * {
@@ -14,284 +14,108 @@
 }
 
 body {
-  background:url('assets/bg.jpg') no-repeat center/cover;
-  min-height:100vh;
+  height:100vh;
+  overflow:hidden;
+  background: linear-gradient(135deg,#0f172a,#1e3a8a);
+  display:flex;
+  justify-content:center;
+  align-items:center;
   color:white;
 }
 
-/* OVERLAY */
-body::before {
-  content:"";
-  position:fixed;
+/* FLOATING BACKGROUND */
+.bg {
+  position:absolute;
   width:100%;
   height:100%;
-  background:linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7));
+  overflow:hidden;
   z-index:0;
 }
 
-/* CONTAINER */
+.circle {
+  position:absolute;
+  border-radius:50%;
+  background:rgba(255,255,255,0.05);
+  animation: float 20s infinite linear;
+}
+
+.circle:nth-child(1){
+  width:200px;height:200px;left:10%;top:20%;
+}
+.circle:nth-child(2){
+  width:300px;height:300px;left:70%;top:60%;
+  animation-duration:25s;
+}
+.circle:nth-child(3){
+  width:150px;height:150px;left:40%;top:80%;
+  animation-duration:18s;
+}
+
+@keyframes float {
+  0% { transform:translateY(0px) rotate(0deg);}
+  50% { transform:translateY(-40px) rotate(180deg);}
+  100% { transform:translateY(0px) rotate(360deg);}
+}
+
+/* CONTENT */
 .container {
   position:relative;
   z-index:2;
-  max-width:1100px;
-  margin:auto;
-  padding:30px 20px;
-}
-
-/* HEADER */
-.header {
   text-align:center;
-  margin-bottom:30px;
 }
 
-.header img {
-  width:120px;
-  margin-bottom:10px;
-}
-
-.header h1 {
-  font-size:34px;
-  font-weight:600;
-}
-
-/* SUMMARY CARDS */
-.summary {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:15px;
+/* LOGO FLOAT */
+.logo {
+  width:150px;
   margin-bottom:20px;
+  animation: floatLogo 4s ease-in-out infinite;
 }
 
-.card {
-  border-radius:18px;
-  padding:20px;
-  backdrop-filter:blur(10px);
-  background:rgba(255,255,255,0.15);
+@keyframes floatLogo {
+  0%,100% { transform:translateY(0);}
+  50% { transform:translateY(-15px);}
 }
 
-.card h4 {
-  margin-bottom:10px;
-  font-weight:500;
+/* TEXT */
+.title {
+  font-size:32px;
+  opacity:0;
+  animation: fadeIn 2s ease forwards;
+  animation-delay:1s;
 }
 
-.card span {
-  font-size:28px;
-  font-weight:bold;
+.subtitle {
+  margin-top:10px;
+  font-size:18px;
+  opacity:0;
+  animation: fadeIn 2s ease forwards;
+  animation-delay:2s;
+  color:#cbd5f5;
 }
 
-/* CARD COLORS */
-.blue { background:linear-gradient(135deg,#5b8cff,#7aaeff); }
-.orange { background:linear-gradient(135deg,#fbbf24,#fcd34d); }
-.green { background:linear-gradient(135deg,#34d399,#6ee7b7); }
-.purple { background:linear-gradient(135deg,#a78bfa,#c4b5fd); }
-
-/* FORM BOX */
-.box {
-  background:rgba(255,255,255,0.2);
-  backdrop-filter:blur(15px);
-  border-radius:20px;
-  padding:20px;
-  margin-bottom:20px;
-  color:#1f2937;
+@keyframes fadeIn {
+  to { opacity:1; transform:translateY(0);}
+  from { opacity:0; transform:translateY(20px);}
 }
 
-.box h3 {
-  margin-bottom:15px;
-}
-
-/* FORM */
-form {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-  gap:10px;
-}
-
-input, select {
-  padding:10px;
-  border-radius:10px;
-  border:none;
-}
-
-button {
-  background:linear-gradient(135deg,#4f46e5,#6366f1);
-  color:white;
-  border:none;
-  border-radius:10px;
-  padding:10px;
-  cursor:pointer;
-}
-
-/* TABLE */
-.table-box {
-  background:rgba(255,255,255,0.2);
-  backdrop-filter:blur(15px);
-  border-radius:20px;
-  padding:20px;
-}
-
-table {
-  width:100%;
-  border-collapse:collapse;
-  color:#1f2937;
-}
-
-th, td {
-  padding:10px;
-  text-align:center;
-}
-
-th {
-  background:rgba(0,0,0,0.1);
-}
-
-tr:nth-child(even) {
-  background:rgba(255,255,255,0.2);
-}
-
-/* FOOTER */
-.footer {
-  text-align:center;
-  margin-top:20px;
-  font-size:12px;
-  opacity:0.8;
-}
 </style>
 </head>
 
 <body>
 
+<!-- BACKGROUND FLOAT -->
+<div class="bg">
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+</div>
+
+<!-- CONTENT -->
 <div class="container">
-
-<!-- HEADER -->
-<div class="header">
-  <img src="assets/logo.png">
-  <h1>Dashboard Kunjungan MPI</h1>
+  <img src="assets/logo.png" class="logo">
+  <div class="title">Museum Pendidikan Indonesia</div>
+  <div class="subtitle">Museum di Hatiku</div>
 </div>
-
-<!-- SUMMARY -->
-<div class="summary">
-  <div class="card blue">
-    <h4>Total Pengunjung</h4>
-    <span id="totalPengunjung">0</span>
-  </div>
-  <div class="card orange">
-    <h4>Total UNY</h4>
-    <span>0</span>
-  </div>
-  <div class="card green">
-    <h4>Total Umum</h4>
-    <span>0</span>
-  </div>
-  <div class="card purple">
-    <h4>Total Pemasukan</h4>
-    <span id="totalUang">Rp 0</span>
-  </div>
-</div>
-
-<!-- FORM -->
-<div class="box">
-<h3>Tambah Data</h3>
-
-<form id="form">
-<input type="date" id="tanggal" required>
-<input type="text" id="nama" placeholder="Nama" required>
-
-<select id="paket">
-<option value="10000">Umum 10K</option>
-<option value="10000">Sabak 10K</option>
-<option value="35000">Paket 35K</option>
-<option value="50000">Grip 50K</option>
-</select>
-
-<input type="number" id="jumlah" placeholder="Jumlah Orang" required>
-
-<button type="submit">Tambah Data</button>
-</form>
-</div>
-
-<!-- TABLE -->
-<div class="table-box">
-<table>
-<thead>
-<tr>
-<th>No</th>
-<th>Tanggal</th>
-<th>Nama</th>
-<th>Paket</th>
-<th>Jumlah</th>
-<th>Total</th>
-<th>Aksi</th>
-</tr>
-</thead>
-<tbody id="tbody"></tbody>
-</table>
-</div>
-
-<div class="footer">
-© Museum Pendidikan Indonesia
-</div>
-
-</div>
-
-<script>
-
-let data = JSON.parse(localStorage.getItem("mpiData")) || [];
-
-document.getElementById("form").addEventListener("submit", function(e){
-  e.preventDefault();
-
-  let tanggal = document.getElementById("tanggal").value;
-  let nama = document.getElementById("nama").value;
-  let paket = document.getElementById("paket");
-  let harga = parseInt(paket.value);
-  let namaPaket = paket.options[paket.selectedIndex].text;
-  let jumlah = parseInt(document.getElementById("jumlah").value);
-
-  let total = harga * jumlah;
-
-  data.push({tanggal,nama,namaPaket,jumlah,total});
-  localStorage.setItem("mpiData", JSON.stringify(data));
-
-  render();
-  this.reset();
-});
-
-function render(){
-  let tbody = document.getElementById("tbody");
-  tbody.innerHTML="";
-
-  let totalPengunjung = 0;
-  let totalUang = 0;
-
-  data.forEach((d,i)=>{
-    totalPengunjung += d.jumlah;
-    totalUang += d.total;
-
-    tbody.innerHTML += `
-    <tr>
-      <td>${i+1}</td>
-      <td>${d.tanggal}</td>
-      <td>${d.nama}</td>
-      <td>${d.namaPaket}</td>
-      <td>${d.jumlah}</td>
-      <td>Rp ${d.total}</td>
-      <td><button onclick="hapus(${i})">Hapus</button></td>
-    </tr>`;
-  });
-
-  document.getElementById("totalPengunjung").innerText = totalPengunjung;
-  document.getElementById("totalUang").innerText = "Rp " + totalUang;
-}
-
-function hapus(i){
-  data.splice(i,1);
-  localStorage.setItem("mpiData", JSON.stringify(data));
-  render();
-}
-
-render();
-
-</script>
 
 </body>
 </html>
