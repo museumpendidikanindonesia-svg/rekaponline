@@ -2,32 +2,30 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard MPI</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard MPI</title>
 
 <style>
 * {
   margin:0;
   padding:0;
   box-sizing:border-box;
-  font-family: 'Segoe UI', sans-serif;
+  font-family:'Segoe UI', sans-serif;
 }
 
 body {
-  height:100vh;
-  background: url('assets/bg.jpg') no-repeat center/cover;
-  position:relative;
+  background:url('assets/bg.jpg') no-repeat center/cover;
+  min-height:100vh;
   color:white;
 }
 
 /* OVERLAY */
 body::before {
   content:"";
-  position:absolute;
+  position:fixed;
   width:100%;
   height:100%;
-  background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.85));
+  background:linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.7));
   z-index:0;
 }
 
@@ -35,9 +33,9 @@ body::before {
 .container {
   position:relative;
   z-index:2;
-  padding:30px;
-  max-width:1200px;
+  max-width:1100px;
   margin:auto;
+  padding:30px 20px;
 }
 
 /* HEADER */
@@ -52,24 +50,28 @@ body::before {
 }
 
 .header h1 {
-  font-size:32px;
-  font-weight:bold;
+  font-size:34px;
+  font-weight:600;
 }
 
-/* DASHBOARD */
+/* SUMMARY CARDS */
 .summary {
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:15px;
   margin-bottom:20px;
 }
 
 .card {
-  backdrop-filter: blur(10px);
-  background: rgba(255,255,255,0.15);
-  border-radius:15px;
+  border-radius:18px;
   padding:20px;
-  text-align:center;
+  backdrop-filter:blur(10px);
+  background:rgba(255,255,255,0.15);
+}
+
+.card h4 {
+  margin-bottom:10px;
+  font-weight:500;
 }
 
 .card span {
@@ -77,45 +79,60 @@ body::before {
   font-weight:bold;
 }
 
-/* FORM */
-.form-box {
-  backdrop-filter: blur(12px);
-  background: rgba(255,255,255,0.1);
+/* CARD COLORS */
+.blue { background:linear-gradient(135deg,#5b8cff,#7aaeff); }
+.orange { background:linear-gradient(135deg,#fbbf24,#fcd34d); }
+.green { background:linear-gradient(135deg,#34d399,#6ee7b7); }
+.purple { background:linear-gradient(135deg,#a78bfa,#c4b5fd); }
+
+/* FORM BOX */
+.box {
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
   padding:20px;
-  border-radius:15px;
   margin-bottom:20px;
+  color:#1f2937;
 }
 
+.box h3 {
+  margin-bottom:15px;
+}
+
+/* FORM */
 form {
   display:grid;
-  grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
   gap:10px;
 }
 
-input, select, button {
+input, select {
   padding:10px;
+  border-radius:10px;
   border:none;
-  border-radius:8px;
 }
 
 button {
-  background:#4f46e5;
+  background:linear-gradient(135deg,#4f46e5,#6366f1);
   color:white;
+  border:none;
+  border-radius:10px;
+  padding:10px;
   cursor:pointer;
 }
 
 /* TABLE */
 .table-box {
-  backdrop-filter: blur(12px);
-  background: rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.2);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
   padding:20px;
-  border-radius:15px;
 }
 
 table {
   width:100%;
   border-collapse:collapse;
-  color:white;
+  color:#1f2937;
 }
 
 th, td {
@@ -124,13 +141,20 @@ th, td {
 }
 
 th {
-  background: rgba(255,255,255,0.2);
+  background:rgba(0,0,0,0.1);
 }
 
 tr:nth-child(even) {
-  background: rgba(255,255,255,0.05);
+  background:rgba(255,255,255,0.2);
 }
 
+/* FOOTER */
+.footer {
+  text-align:center;
+  margin-top:20px;
+  font-size:12px;
+  opacity:0.8;
+}
 </style>
 </head>
 
@@ -138,19 +162,36 @@ tr:nth-child(even) {
 
 <div class="container">
 
+<!-- HEADER -->
 <div class="header">
   <img src="assets/logo.png">
   <h1>Dashboard Kunjungan MPI</h1>
 </div>
 
-<!-- DASHBOARD -->
+<!-- SUMMARY -->
 <div class="summary">
-  <div class="card">Total Pengunjung<br><span id="totalPengunjung">0</span></div>
-  <div class="card">Total Pemasukan<br><span id="totalUang">Rp 0</span></div>
+  <div class="card blue">
+    <h4>Total Pengunjung</h4>
+    <span id="totalPengunjung">0</span>
+  </div>
+  <div class="card orange">
+    <h4>Total UNY</h4>
+    <span>0</span>
+  </div>
+  <div class="card green">
+    <h4>Total Umum</h4>
+    <span>0</span>
+  </div>
+  <div class="card purple">
+    <h4>Total Pemasukan</h4>
+    <span id="totalUang">Rp 0</span>
+  </div>
 </div>
 
 <!-- FORM -->
-<div class="form-box">
+<div class="box">
+<h3>Tambah Data</h3>
+
 <form id="form">
 <input type="date" id="tanggal" required>
 <input type="text" id="nama" placeholder="Nama" required>
@@ -162,9 +203,9 @@ tr:nth-child(even) {
 <option value="50000">Grip 50K</option>
 </select>
 
-<input type="number" id="jumlah" placeholder="Jumlah" required>
+<input type="number" id="jumlah" placeholder="Jumlah Orang" required>
 
-<button type="submit">Tambah</button>
+<button type="submit">Tambah Data</button>
 </form>
 </div>
 
@@ -184,6 +225,10 @@ tr:nth-child(even) {
 </thead>
 <tbody id="tbody"></tbody>
 </table>
+</div>
+
+<div class="footer">
+© 2023–2026 Museum Pendidikan Indonesia
 </div>
 
 </div>
