@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard MPI</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+  height:100vh;
+  background: url('assets/bg.jpg') no-repeat center/cover;
+  position:relative;
+  color:white;
+}
+
+/* OVERLAY */
+body::before {
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.85));
+  z-index:0;
+}
+
+/* CONTAINER */
+.container {
+  position:relative;
+  z-index:2;
+  padding:30px;
+  max-width:1200px;
+  margin:auto;
+}
+
+/* HEADER */
+.header {
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.header img {
+  width:120px;
+  margin-bottom:10px;
+}
+
+.header h1 {
+  font-size:32px;
+  font-weight:bold;
+}
+
+/* DASHBOARD */
+.summary {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.card {
+  backdrop-filter: blur(10px);
+  background: rgba(255,255,255,0.15);
+  border-radius:15px;
+  padding:20px;
+  text-align:center;
+}
+
+.card span {
+  font-size:28px;
+  font-weight:bold;
+}
+
+/* FORM */
+.form-box {
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.1);
+  padding:20px;
+  border-radius:15px;
+  margin-bottom:20px;
+}
+
+form {
+  display:grid;
+  grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+  gap:10px;
+}
+
+input, select, button {
+  padding:10px;
+  border:none;
+  border-radius:8px;
+}
+
+button {
+  background:#4f46e5;
+  color:white;
+  cursor:pointer;
+}
+
+/* TABLE */
+.table-box {
+  backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.1);
+  padding:20px;
+  border-radius:15px;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  color:white;
+}
+
+th, td {
+  padding:10px;
+  text-align:center;
+}
+
+th {
+  background: rgba(255,255,255,0.2);
+}
+
+tr:nth-child(even) {
+  background: rgba(255,255,255,0.05);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+  <img src="assets/logo.png">
+  <h1>Dashboard Kunjungan MPI</h1>
+</div>
+
+<!-- DASHBOARD -->
+<div class="summary">
+  <div class="card">Total Pengunjung<br><span id="totalPengunjung">0</span></div>
+  <div class="card">Total Pemasukan<br><span id="totalUang">Rp 0</span></div>
+</div>
+
+<!-- FORM -->
+<div class="form-box">
+<form id="form">
+<input type="date" id="tanggal" required>
+<input type="text" id="nama" placeholder="Nama" required>
+
+<select id="paket">
+<option value="10000">Umum 10K</option>
+<option value="10000">Sabak 10K</option>
+<option value="35000">Paket 35K</option>
+<option value="50000">Grip 50K</option>
+</select>
+
+<input type="number" id="jumlah" placeholder="Jumlah" required>
+
+<button type="submit">Tambah</button>
+</form>
+</div>
+
+<!-- TABLE -->
+<div class="table-box">
+<table>
+<thead>
+<tr>
+<th>No</th>
+<th>Tanggal</th>
+<th>Nama</th>
+<th>Paket</th>
+<th>Jumlah</th>
+<th>Total</th>
+<th>Aksi</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+
+let data = JSON.parse(localStorage.getItem("mpiData")) || [];
+
+document.getElementById("form").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  let tanggal = document.getElementById("tanggal").value;
+  let nama = document.getElementById("nama").value;
+  let paket = document.getElementById("paket");
+  let harga = parseInt(paket.value);
+  let namaPaket = paket.options[paket.selectedIndex].text;
+  let jumlah = parseInt(document.getElementById("jumlah").value);
+
+  let total = harga * jumlah;
+
+  data.push({tanggal,nama,namaPaket,jumlah,total});
+  localStorage.setItem("mpiData", JSON.stringify(data));
+
+  render();
+  this.reset();
+});
+
+function render(){
+  let tbody = document.getElementById("tbody");
+  tbody.innerHTML="";
+
+  let totalPengunjung = 0;
+  let totalUang = 0;
+
+  data.forEach((d,i)=>{
+    totalPengunjung += d.jumlah;
+    totalUang += d.total;
+
+    tbody.innerHTML += `
+    <tr>
+      <td>${i+1}</td>
+      <td>${d.tanggal}</td>
+      <td>${d.nama}</td>
+      <td>${d.namaPaket}</td>
+      <td>${d.jumlah}</td>
+      <td>Rp ${d.total}</td>
+      <td><button onclick="hapus(${i})">Hapus</button></td>
+    </tr>`;
+  });
+
+  document.getElementById("totalPengunjung").innerText = totalPengunjung;
+  document.getElementById("totalUang").innerText = "Rp " + totalUang;
+}
+
+function hapus(i){
+  data.splice(i,1);
+  localStorage.setItem("mpiData", JSON.stringify(data));
+  render();
+}
+
+render();
+
+</script>
+
+</body>
+</html>
