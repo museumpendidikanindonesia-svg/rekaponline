@@ -1,325 +1,47 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard MPI</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
-
-body{
-  background:url('assets/bg.jpg') center/cover no-repeat;
-  min-height:100vh;
-}
-
-/* OVERLAY */
-.overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(255,255,255,0.75);
-  backdrop-filter:blur(10px);
-}
-
-/* NAVBAR */
-.navbar{
-  position:relative;
-  z-index:2;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 30px;
-  background:rgba(255,255,255,0.8);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(0,0,0,0.05);
-}
-
-.nav-left{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.nav-left img{width:40px}
-.nav-left span{font-weight:600}
-
-.nav-menu{
-  display:flex;
-  gap:20px;
-}
-.nav-item{
-  padding:6px 12px;
-  border-radius:10px;
-  cursor:pointer;
-  font-size:14px;
-}
-.nav-item.active{
-  background:#2563eb;
-  color:white;
-}
-
-/* MAIN WRAPPER */
-.wrapper{
-  position:relative;
-  z-index:2;
-  max-width:1100px;
-  margin:30px auto;
-}
-
-/* GLASS CONTAINER */
-.container{
-  background:rgba(255,255,255,0.8);
-  backdrop-filter:blur(25px);
-  border-radius:30px;
-  padding:25px;
-  box-shadow:0 30px 60px rgba(0,0,0,0.1);
-}
-
-/* HEADER */
-.header{
-  text-align:center;
-  margin-bottom:20px;
-}
-.header img{width:80px;margin-bottom:10px}
-.header h1{font-size:26px;font-weight:600}
-
-/* CARDS */
-.cards{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
-  margin-bottom:20px;
-}
-.card{
-  padding:15px;
-  border-radius:20px;
-  color:white;
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-}
-.card span{font-size:22px;font-weight:600}
-
-.blue{background:linear-gradient(135deg,#3b82f6,#60a5fa)}
-.orange{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
-.green{background:linear-gradient(135deg,#10b981,#34d399)}
-.purple{background:linear-gradient(135deg,#8b5cf6,#a78bfa)}
-
-/* FORM + FILTER */
-.top-bar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-
-.form{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:10px;
-  margin-bottom:15px;
-}
-
-input,select{
-  padding:10px;
-  border-radius:12px;
-  border:1px solid #e5e7eb;
-  background:#f9fafb;
-}
-
-button{
-  background:linear-gradient(135deg,#2563eb,#3b82f6);
-  color:white;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-}
-
-/* TABLE */
-.table-section{
-  background:white;
-  border-radius:15px;
-  overflow:hidden;
-  margin-bottom:15px;
-}
-table{
-  width:100%;
-  border-collapse:collapse;
-}
-th,td{
-  padding:10px;
-  text-align:center;
-  font-size:13px;
-}
-th{
-  background:#2563eb;
-  color:white;
-}
-tr:nth-child(even){
-  background:#f8fafc;
-}
-
-/* FOOTER */
-.footer{
-  text-align:center;
-  font-size:12px;
-  color:#64748b;
-}
-
-</style>
+<title>Dashboard</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/components.css">
 </head>
 
 <body>
 
 <div class="overlay"></div>
+<div id="navbar"></div>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <div class="nav-left">
-    <img src="assets/logo.png">
-    <span>Museum Pendidikan Indonesia</span>
-  </div>
-
-  <div class="nav-menu">
-    <div class="nav-item active">Dashboard</div>
-    <div class="nav-item" onclick="location.href='statistik.html'">Statistik</div>
-    <div class="nav-item" onclick="logout()">Logout</div>
-  </div>
-</div>
-
-<div class="wrapper">
 <div class="container">
 
-<!-- HEADER -->
-<div class="header">
-  <img src="assets/logo.png">
-  <h1>Dashboard Kunjungan MPI</h1>
-</div>
+<h2>Dashboard</h2>
 
-<!-- CARDS -->
 <div class="cards">
-  <div class="card blue">Total Pengunjung <span id="totalPengunjung">0</span></div>
-  <div class="card orange">Total UNY <span id="totalUNY">0</span></div>
-  <div class="card green">Total Umum <span id="totalUmum">0</span></div>
-  <div class="card purple">Total Pemasukan <span id="totalUang">0</span></div>
+  <div class="card blue">Total <span id="totalPengunjung"></span></div>
+  <div class="card purple">Rp <span id="totalUang"></span></div>
 </div>
 
-<!-- FILTER -->
-<div class="top-bar">
-  <b>Tambah Data</b>
-  <div>
-    <select id="bulan" onchange="render()">
-      <option value="">Semua</option>
-      <option value="0">Jan</option>
-      <option value="1">Feb</option>
-      <option value="2">Mar</option>
-      <option value="3">Apr</option>
-    </select>
-    <input type="number" id="tahun" placeholder="2026" oninput="render()">
-  </div>
-</div>
-
-<!-- FORM -->
-<form id="form" class="form">
-  <input type="date" id="tanggal" required>
-  <input type="text" id="nama" placeholder="Nama">
-
-  <select id="kategori">
-    <option>Umum</option>
-    <option>TK</option>
-    <option>SD</option>
-    <option>SMP</option>
-    <option>SMA</option>
-    <option>Universitas</option>
-    <option>UNY</option>
-  </select>
-
-  <select id="paket">
-    <option>Umum</option>
-    <option>Sabak</option>
-    <option>Paket</option>
-    <option>Grip</option>
-    <option>Ongotan</option>
-  </select>
-
-  <input type="number" id="jumlah" placeholder="Jumlah">
-  <button type="submit">Tambah</button>
+<form id="form">
+<input type="date" id="tanggal">
+<input type="text" id="nama">
+<select id="kategori"><option>Umum</option><option>UNY</option></select>
+<select id="paket"><option>Umum</option><option>Grip</option></select>
+<input type="number" id="jumlah">
+<button>Tambah</button>
 </form>
 
-<!-- TABLE -->
-<div class="table-section">
 <table>
-<thead>
-<tr>
-<th>No</th>
-<th>Tanggal</th>
-<th>Nama</th>
-<th>Paket</th>
-<th>Jumlah</th>
-<th>Total</th>
-<th>Aksi</th>
-</tr>
-</thead>
+<thead><tr><th>No</th><th>Tanggal</th><th>Nama</th><th>Total</th></tr></thead>
 <tbody id="tbody"></tbody>
 </table>
-</div>
-
-<div class="footer">© Museum Pendidikan Indonesia</div>
 
 </div>
-</div>
 
-<script>
-const harga={Umum:10000,Sabak:10000,Paket:35000,Grip:50000,Ongotan:100000}
-let data=JSON.parse(localStorage.getItem("mpiData"))||[]
-
-form.onsubmit=e=>{
-e.preventDefault()
-let h=kategori.value==="UNY"?0:harga[paket.value]
-let total=h*jumlah.value
-data.push({tanggal:tanggal.value,nama:nama.value,kategori:kategori.value,paket:paket.value,jumlah:+jumlah.value,total})
-localStorage.setItem("mpiData",JSON.stringify(data))
-render()
-}
-
-function render(){
-tbody.innerHTML=""
-let tp=0,tu=0,tuny=0,tum=0
-data.forEach((d,i)=>{
-tp+=d.jumlah;tu+=d.total
-if(d.kategori==="UNY") tuny+=d.jumlah; else tum+=d.jumlah
-tbody.innerHTML+=`<tr>
-<td>${i+1}</td><td>${d.tanggal}</td><td>${d.nama}</td>
-<td>${d.paket}</td><td>${d.jumlah}</td>
-<td>Rp ${d.total}</td>
-<td><button onclick="hapus(${i})">Hapus</button></td>
-</tr>`
-})
-totalPengunjung.innerText=tp
-totalUNY.innerText=tuny
-totalUmum.innerText=tum
-totalUang.innerText="Rp "+tu
-}
-
-function hapus(i){
-data.splice(i,1)
-localStorage.setItem("mpiData",JSON.stringify(data))
-render()
-}
-
-function logout(){
-window.location.href="login.html"
-}
-
-render()
+<script type="module">
+import {renderNavbar} from "./js/components/navbar.js";
+document.getElementById("navbar").innerHTML = renderNavbar("dashboard");
 </script>
 
-<script>
-function goStatistik(){
-  window.location.href = "statistik.html";
-}
-</script>
+<script type="module" src="js/pages/dashboard.js"></script>
 
 </body>
 </html>
