@@ -5,102 +5,84 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard MPI</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
 
 body{
-  font-family:'Inter',sans-serif;
-  background:url('assets/bg.jpg') center/cover no-repeat;
   min-height:100vh;
-  color:#1e293b;
+  background:url('assets/bg.jpg') center/cover no-repeat;
 }
 
 /* OVERLAY */
 .overlay{
   position:fixed;
   inset:0;
-  background:rgba(255,255,255,0.7);
+  background:rgba(255,255,255,0.75);
   backdrop-filter:blur(10px);
-}
-
-/* NAVBAR */
-.navbar{
-  position:relative;
-  z-index:2;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 30px;
-  background:rgba(255,255,255,0.8);
-  backdrop-filter:blur(10px);
-  box-shadow:0 5px 20px rgba(0,0,0,0.05);
-}
-
-.nav-left{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-.nav-left img{width:40px}
-.nav-left span{
-  font-family:'Playfair Display',serif;
-  font-weight:600;
-}
-
-.nav-menu{
-  display:flex;
-  gap:20px;
-}
-.nav-menu div{
-  cursor:pointer;
-  font-size:14px;
-}
-.nav-menu div:hover{
-  color:#2563eb;
 }
 
 /* CONTAINER */
-.container{
+.wrapper{
   position:relative;
   z-index:2;
-  padding:20px;
   max-width:1100px;
-  margin:auto;
+  margin:40px auto;
+  padding:20px;
 }
 
-/* SUMMARY */
-.summary{
+/* HEADER */
+.header{
+  text-align:center;
+  margin-bottom:20px;
+}
+.header img{
+  width:90px;
+  margin-bottom:10px;
+}
+.header h1{
+  font-size:26px;
+  font-weight:600;
+}
+
+/* GLASS PANEL */
+.panel{
+  background:rgba(255,255,255,0.8);
+  backdrop-filter:blur(20px);
+  border-radius:25px;
+  padding:20px;
+  box-shadow:0 20px 50px rgba(0,0,0,0.1);
+}
+
+/* CARDS */
+.cards{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  grid-template-columns:repeat(4,1fr);
   gap:15px;
   margin-bottom:20px;
 }
 .card{
-  background:rgba(255,255,255,0.9);
+  border-radius:20px;
   padding:15px;
-  border-radius:15px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+  color:white;
 }
-.card span{
-  font-size:22px;
-  font-weight:bold;
-}
+.card h4{font-size:14px}
+.card span{font-size:24px;font-weight:600}
+
+.blue{background:linear-gradient(135deg,#3b82f6,#60a5fa)}
+.orange{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.green{background:linear-gradient(135deg,#10b981,#34d399)}
+.purple{background:linear-gradient(135deg,#8b5cf6,#a78bfa)}
 
 /* FORM */
-.form-box{
-  background:rgba(255,255,255,0.9);
-  padding:20px;
-  border-radius:15px;
-  margin-bottom:20px;
-}
-form{
+.form{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  grid-template-columns:repeat(5,1fr);
   gap:10px;
+  margin-bottom:15px;
 }
-input,select,button{
+input,select{
   padding:10px;
   border-radius:10px;
   border:1px solid #ddd;
@@ -109,17 +91,20 @@ button{
   background:#2563eb;
   color:white;
   border:none;
+  border-radius:10px;
   cursor:pointer;
 }
 
 /* FILTER */
 .filter{
-  margin-bottom:15px;
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
 }
 
 /* TABLE */
-.table-box{
-  background:rgba(255,255,255,0.95);
+.table{
+  background:white;
   border-radius:15px;
   overflow:hidden;
 }
@@ -146,91 +131,93 @@ tr:nth-child(even){
 
 <div class="overlay"></div>
 
-<!-- NAVBAR -->
-<div class="navbar">
-  <div class="nav-left">
-    <img src="assets/logo.png">
-    <span>MPI Dashboard</span>
-  </div>
+<div class="wrapper">
 
-  <div class="nav-menu">
-    <div>Dashboard</div>
-    <div onclick="alert('Halaman Statistik belum dibuat')">Statistik</div>
-    <div onclick="logout()">Logout</div>
-  </div>
+<div class="header">
+  <img src="assets/logo.png">
+  <h1>Dashboard Kunjungan MPI</h1>
 </div>
 
-<div class="container">
+<div class="panel">
 
-<!-- SUMMARY -->
-<div class="summary">
-  <div class="card">Total Pengunjung<br><span id="totalPengunjung">0</span></div>
-  <div class="card">Total Pemasukan<br><span id="totalUang">0</span></div>
-  <div class="card">Pengunjung Gratis (UNY)<br><span id="totalGratis">0</span></div>
-</div>
-
-<!-- FORM -->
-<div class="form-box">
-<form id="form">
-<input type="date" id="tanggal" required>
-<input type="text" id="nama" placeholder="Nama Instansi" required>
-
-<select id="kategori">
-<option>Umum</option>
-<option>TK</option>
-<option>SD</option>
-<option>SMP</option>
-<option>SMA</option>
-<option>Universitas</option>
-<option>UNY</option>
-</select>
-
-<select id="paket">
-<option>Umum</option>
-<option>Sabak</option>
-<option>Paket</option>
-<option>Grip</option>
-<option>Ongotan</option>
-</select>
-
-<input type="number" id="jumlah" placeholder="Jumlah" required>
-
-<button type="submit">Tambah</button>
-</form>
+<!-- CARDS -->
+<div class="cards">
+  <div class="card blue">
+    <h4>Total Pengunjung</h4>
+    <span id="totalPengunjung">0</span>
+  </div>
+  <div class="card orange">
+    <h4>Total UNY</h4>
+    <span id="totalUNY">0</span>
+  </div>
+  <div class="card green">
+    <h4>Total Umum</h4>
+    <span id="totalUmum">0</span>
+  </div>
+  <div class="card purple">
+    <h4>Total Pemasukan</h4>
+    <span id="totalUang">0</span>
+  </div>
 </div>
 
 <!-- FILTER -->
 <div class="filter">
-Filter Bulan:
-<select id="bulan" onchange="render()">
-<option value="">Semua</option>
-<option value="0">Jan</option>
-<option value="1">Feb</option>
-<option value="2">Mar</option>
-<option value="3">Apr</option>
-<option value="4">Mei</option>
-<option value="5">Jun</option>
-<option value="6">Jul</option>
-<option value="7">Agu</option>
-<option value="8">Sep</option>
-<option value="9">Okt</option>
-<option value="10">Nov</option>
-<option value="11">Des</option>
-</select>
-
-Tahun:
-<input type="number" id="tahun" placeholder="2026" oninput="render()">
+  <div>Tambah Data</div>
+  <div>
+    <select id="bulan" onchange="render()">
+      <option value="">Semua</option>
+      <option value="0">Jan</option>
+      <option value="1">Feb</option>
+      <option value="2">Mar</option>
+      <option value="3">Apr</option>
+      <option value="4">Mei</option>
+      <option value="5">Jun</option>
+      <option value="6">Jul</option>
+      <option value="7">Agu</option>
+      <option value="8">Sep</option>
+      <option value="9">Okt</option>
+      <option value="10">Nov</option>
+      <option value="11">Des</option>
+    </select>
+    <input type="number" id="tahun" placeholder="2026" oninput="render()">
+  </div>
 </div>
 
+<!-- FORM -->
+<form id="form" class="form">
+  <input type="date" id="tanggal" required>
+  <input type="text" id="nama" placeholder="Nama">
+
+  <select id="kategori">
+    <option>Umum</option>
+    <option>TK</option>
+    <option>SD</option>
+    <option>SMP</option>
+    <option>SMA</option>
+    <option>Universitas</option>
+    <option>UNY</option>
+  </select>
+
+  <select id="paket">
+    <option>Umum</option>
+    <option>Sabak</option>
+    <option>Paket</option>
+    <option>Grip</option>
+    <option>Ongotan</option>
+  </select>
+
+  <input type="number" id="jumlah" placeholder="Jumlah">
+  <button type="submit">Tambah</button>
+</form>
+
 <!-- TABLE -->
-<div class="table-box">
+<div class="table">
 <table>
 <thead>
 <tr>
 <th>No</th>
 <th>Tanggal</th>
-<th>Instansi</th>
-<th>Kategori</th>
+<th>Nama</th>
 <th>Paket</th>
 <th>Jumlah</th>
 <th>Total</th>
@@ -243,36 +230,42 @@ Tahun:
 
 </div>
 
+</div>
+
 <script>
 
-const hargaMap = {
-  "Umum":10000,
-  "Sabak":10000,
-  "Paket":35000,
-  "Grip":50000,
-  "Ongotan":100000
+const harga = {
+  Umum:10000,
+  Sabak:10000,
+  Paket:35000,
+  Grip:50000,
+  Ongotan:100000
 };
 
 let data = JSON.parse(localStorage.getItem("mpiData")) || [];
 
-document.getElementById("form").addEventListener("submit", function(e){
+document.getElementById("form").onsubmit = e=>{
   e.preventDefault();
 
-  let tanggal = tanggalEl.value;
-  let nama = namaEl.value;
   let kategori = kategoriEl.value;
   let paket = paketEl.value;
-  let jumlah = parseInt(jumlahEl.value);
+  let jumlah = +jumlahEl.value;
 
-  let harga = kategori === "UNY" ? 0 : hargaMap[paket];
-  let total = harga * jumlah;
+  let h = kategori==="UNY"?0:harga[paket];
+  let total = h * jumlah;
 
-  data.push({tanggal,nama,kategori,paket,jumlah,total});
+  data.push({
+    tanggal:tanggalEl.value,
+    nama:namaEl.value,
+    kategori,
+    paket,
+    jumlah,
+    total
+  });
+
   localStorage.setItem("mpiData", JSON.stringify(data));
-
   render();
-  this.reset();
-});
+};
 
 const tanggalEl = document.getElementById("tanggal");
 const namaEl = document.getElementById("nama");
@@ -284,41 +277,31 @@ function render(){
   let tbody = document.getElementById("tbody");
   tbody.innerHTML="";
 
-  let totalPengunjung=0;
-  let totalUang=0;
-  let totalGratis=0;
-
-  let bulan = document.getElementById("bulan").value;
-  let tahun = document.getElementById("tahun").value;
+  let totalPengunjung=0,totalUNY=0,totalUmum=0,totalUang=0;
 
   data.forEach((d,i)=>{
-    let tgl = new Date(d.tanggal);
-    let b = tgl.getMonth();
-    let th = tgl.getFullYear();
+    totalPengunjung+=d.jumlah;
+    totalUang+=d.total;
 
-    if((bulan===""||b==bulan)&&(tahun===""||th==tahun)){
+    if(d.kategori==="UNY") totalUNY+=d.jumlah;
+    else totalUmum+=d.jumlah;
 
-      totalPengunjung += d.jumlah;
-      totalUang += d.total;
-      if(d.total===0) totalGratis += d.jumlah;
-
-      tbody.innerHTML += `
-      <tr>
-        <td>${i+1}</td>
-        <td>${d.tanggal}</td>
-        <td>${d.nama}</td>
-        <td>${d.kategori}</td>
-        <td>${d.paket}</td>
-        <td>${d.jumlah}</td>
-        <td>Rp ${d.total}</td>
-        <td><button onclick="hapus(${i})">Hapus</button></td>
-      </tr>`;
-    }
+    tbody.innerHTML+=`
+    <tr>
+      <td>${i+1}</td>
+      <td>${d.tanggal}</td>
+      <td>${d.nama}</td>
+      <td>${d.paket}</td>
+      <td>${d.jumlah}</td>
+      <td>Rp ${d.total}</td>
+      <td><button onclick="hapus(${i})">Hapus</button></td>
+    </tr>`;
   });
 
-  totalPengunjungEl.innerText = totalPengunjung;
-  totalUangEl.innerText = "Rp "+totalUang;
-  totalGratisEl.innerText = totalGratis;
+  document.getElementById("totalPengunjung").innerText=totalPengunjung;
+  document.getElementById("totalUNY").innerText=totalUNY;
+  document.getElementById("totalUmum").innerText=totalUmum;
+  document.getElementById("totalUang").innerText="Rp "+totalUang;
 }
 
 function hapus(i){
@@ -326,14 +309,6 @@ function hapus(i){
   localStorage.setItem("mpiData", JSON.stringify(data));
   render();
 }
-
-function logout(){
-  window.location.href="login.html";
-}
-
-const totalPengunjungEl=document.getElementById("totalPengunjung");
-const totalUangEl=document.getElementById("totalUang");
-const totalGratisEl=document.getElementById("totalGratis");
 
 render();
 
