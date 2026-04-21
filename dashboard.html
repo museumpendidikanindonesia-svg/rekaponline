@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard MPI</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+
+body{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:url('assets/bg.jpg') center/cover no-repeat;
+}
+
+/* OVERLAY */
+.overlay{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:rgba(255,255,255,0.6);
+  backdrop-filter:blur(10px);
+}
+
+/* CONTAINER */
+.container{
+  position:relative;
+  width:420px;
+  border-radius:25px;
+  padding:20px;
+  background:rgba(255,255,255,0.7);
+  backdrop-filter:blur(20px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.1);
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  margin-bottom:15px;
+}
+.header img{width:80px}
+.header h2{
+  font-size:20px;
+  font-weight:600;
+}
+
+/* CARDS */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-bottom:15px;
+}
+.card{
+  padding:12px;
+  border-radius:15px;
+  color:white;
+}
+.card h4{font-size:12px}
+.card span{font-size:20px;font-weight:bold}
+
+.blue{background:linear-gradient(135deg,#3b82f6,#60a5fa)}
+.orange{background:linear-gradient(135deg,#f59e0b,#fbbf24)}
+.green{background:linear-gradient(135deg,#10b981,#34d399)}
+.purple{background:linear-gradient(135deg,#8b5cf6,#a78bfa)}
+
+/* FORM */
+.form{
+  background:rgba(255,255,255,0.9);
+  padding:12px;
+  border-radius:15px;
+  margin-bottom:15px;
+}
+.form h3{font-size:14px;margin-bottom:8px}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+input,select{
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #ddd;
+}
+button{
+  grid-column:span 2;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+}
+
+/* TABLE */
+.table{
+  background:white;
+  border-radius:15px;
+  overflow:hidden;
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  font-size:12px;
+  padding:8px;
+  text-align:center;
+}
+th{background:#2563eb;color:white}
+tr:nth-child(even){background:#f1f5f9}
+
+</style>
+</head>
+
+<body>
+
+<div class="overlay"></div>
+
+<div class="container">
+
+  <div class="header">
+    <img src="assets/logo.png">
+    <h2>Dashboard Kunjungan MPI</h2>
+  </div>
+
+  <!-- CARDS -->
+  <div class="cards">
+    <div class="card blue">
+      <h4>Total Pengunjung</h4>
+      <span id="totalPengunjung">0</span>
+    </div>
+    <div class="card orange">
+      <h4>Total UNY</h4>
+      <span id="totalUNY">0</span>
+    </div>
+    <div class="card green">
+      <h4>Total Umum</h4>
+      <span id="totalUmum">0</span>
+    </div>
+    <div class="card purple">
+      <h4>Total Pemasukan</h4>
+      <span id="totalUang">0</span>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form">
+    <h3>Tambah Data</h3>
+    <form id="form" class="form-grid">
+      <input type="date" id="tanggal" required>
+      <input type="text" id="nama" placeholder="Nama">
+
+      <select id="kategori">
+        <option>Umum</option>
+        <option>UNY</option>
+      </select>
+
+      <select id="paket">
+        <option>Umum</option>
+        <option>Sabak</option>
+        <option>Paket</option>
+        <option>Grip</option>
+        <option>Ongotan</option>
+      </select>
+
+      <input type="number" id="jumlah" placeholder="Jumlah">
+      <button type="submit">Tambah Data</button>
+    </form>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table">
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nama</th>
+          <th>Jumlah</th>
+          <th>Total</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+
+const harga = {
+  Umum:10000,
+  Sabak:10000,
+  Paket:35000,
+  Grip:50000,
+  Ongotan:100000
+};
+
+let data = JSON.parse(localStorage.getItem("mpiData")) || [];
+
+document.getElementById("form").onsubmit = e=>{
+  e.preventDefault();
+
+  let kategori = kategoriEl.value;
+  let paket = paketEl.value;
+  let jumlah = +jumlahEl.value;
+
+  let h = kategori==="UNY"?0:harga[paket];
+  let total = h*jumlah;
+
+  data.push({
+    nama:namaEl.value,
+    jumlah,
+    kategori,
+    total
+  });
+
+  localStorage.setItem("mpiData",JSON.stringify(data));
+  render();
+};
+
+const namaEl = document.getElementById("nama");
+const jumlahEl = document.getElementById("jumlah");
+const kategoriEl = document.getElementById("kategori");
+const paketEl = document.getElementById("paket");
+
+function render(){
+  let tbody = document.getElementById("tbody");
+  tbody.innerHTML="";
+
+  let totalPengunjung=0,totalUNY=0,totalUmum=0,totalUang=0;
+
+  data.forEach((d,i)=>{
+    totalPengunjung+=d.jumlah;
+    totalUang+=d.total;
+
+    if(d.kategori==="UNY") totalUNY+=d.jumlah;
+    else totalUmum+=d.jumlah;
+
+    tbody.innerHTML+=`
+    <tr>
+      <td>${i+1}</td>
+      <td>${d.nama}</td>
+      <td>${d.jumlah}</td>
+      <td>Rp ${d.total}</td>
+      <td><button onclick="hapus(${i})">X</button></td>
+    </tr>`;
+  });
+
+  totalPengunjungEl.innerText=totalPengunjung;
+  totalUNYEl.innerText=totalUNY;
+  totalUmumEl.innerText=totalUmum;
+  totalUangEl.innerText="Rp "+totalUang;
+}
+
+function hapus(i){
+  data.splice(i,1);
+  localStorage.setItem("mpiData",JSON.stringify(data));
+  render();
+}
+
+const totalPengunjungEl=document.getElementById("totalPengunjung");
+const totalUNYEl=document.getElementById("totalUNY");
+const totalUmumEl=document.getElementById("totalUmum");
+const totalUangEl=document.getElementById("totalUang");
+
+render();
+
+</script>
+
+</body>
+</html>
